@@ -1,0 +1,6 @@
+location,max_capacity,storage_types_supported,current_utilization_pct,dock_slots
+Chennai,8000,dry,72.0,4
+Pune,2000,"dry,cold",88.0,2
+Mumbai,15000,"dry,cold",65.0,6
+Delhi,12000,"dry,cold",55.0,5
+Bangalore,10000,"dry,cold",60.0,4

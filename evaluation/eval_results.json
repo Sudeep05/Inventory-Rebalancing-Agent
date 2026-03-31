@@ -1,0 +1,124 @@
+{
+  "status_metrics": {
+    "BALANCED": {
+      "precision": 1.0,
+      "recall": 0.8333,
+      "f1": 0.9091,
+      "support": 6,
+      "tp": 5,
+      "fp": 0,
+      "fn": 1
+    },
+    "EXCESS": {
+      "precision": 0.8571,
+      "recall": 1.0,
+      "f1": 0.9231,
+      "support": 6,
+      "tp": 6,
+      "fp": 1,
+      "fn": 0
+    },
+    "SHORTAGE": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 6,
+      "tp": 6,
+      "fp": 0,
+      "fn": 0
+    },
+    "STORAGE_MISMATCH": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 2,
+      "tp": 2,
+      "fp": 0,
+      "fn": 0
+    },
+    "macro_avg": {
+      "precision": 0.9643,
+      "recall": 0.9583,
+      "f1": 0.958
+    },
+    "accuracy": 0.95
+  },
+  "severity_metrics": {
+    "CRITICAL": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 6,
+      "tp": 6,
+      "fp": 0,
+      "fn": 0
+    },
+    "HIGH": {
+      "precision": 1.0,
+      "recall": 0.8333,
+      "f1": 0.9091,
+      "support": 6,
+      "tp": 5,
+      "fp": 0,
+      "fn": 1
+    },
+    "LOW": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "support": 0,
+      "tp": 0,
+      "fp": 2,
+      "fn": 0
+    },
+    "MEDIUM": {
+      "precision": 0.5,
+      "recall": 0.5,
+      "f1": 0.5,
+      "support": 2,
+      "tp": 1,
+      "fp": 1,
+      "fn": 1
+    },
+    "NONE": {
+      "precision": 1.0,
+      "recall": 0.8333,
+      "f1": 0.9091,
+      "support": 6,
+      "tp": 5,
+      "fp": 0,
+      "fn": 1
+    },
+    "macro_avg": {
+      "precision": 0.7,
+      "recall": 0.6333,
+      "f1": 0.6636
+    },
+    "accuracy": 0.85
+  },
+  "mismatches": [
+    {
+      "test_id": "TC06",
+      "expected_status": "EXCESS",
+      "predicted_status": "EXCESS",
+      "expected_severity": "HIGH",
+      "predicted_severity": "MEDIUM"
+    },
+    {
+      "test_id": "TC14",
+      "expected_status": "EXCESS",
+      "predicted_status": "EXCESS",
+      "expected_severity": "MEDIUM",
+      "predicted_severity": "LOW"
+    },
+    {
+      "test_id": "TC16",
+      "expected_status": "BALANCED",
+      "predicted_status": "EXCESS",
+      "expected_severity": "NONE",
+      "predicted_severity": "LOW"
+    }
+  ],
+  "total_cases": 20,
+  "accuracy": 0.95
+}
