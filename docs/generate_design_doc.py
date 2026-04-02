@@ -209,7 +209,20 @@ def build_document():
     story.append(Spacer(1, 2))
     story.append(Paragraph("AMPBA Batch-24  |  Term-4  |  CT2 Group Assignment", styles['DocSub']))
     story.append(Paragraph(f"Date: {datetime.now().strftime('%B %d, %Y')}", styles['DocSub']))
-    story.append(Spacer(1, 16))
+    story.append(Spacer(1, 8))
+    
+    # GitHub Link & Group Number (prominent for TA/Professor)
+    story.append(Paragraph(
+        "<b>📌 Group Number:</b> Group-18", 
+        styles['SSH']
+    ))
+    story.append(Paragraph(
+        "<b>🔗 GitHub Repository:</b> "
+        "<a href='https://github.com/Sudeep05/Inventory-Rebalancing-Agent' "
+        "color='blue'><u>https://github.com/Sudeep05/Inventory-Rebalancing-Agent</u></a>",
+        styles['SSH']
+    ))
+    story.append(Spacer(1, 12))
     story.append(DrawingFlowable(create_metrics_strip()))
     story.append(Spacer(1, 20))
 
