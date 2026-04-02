@@ -2,6 +2,7 @@
 Agentic Inventory Rebalancing System
 =====================================
 Main entry point for running the multi-agent pipeline.
+Framework: LangGraph (with fallback to plain orchestrator)
 
 Usage:
     python main.py                          # Run happy path
@@ -17,7 +18,13 @@ import os
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from pipeline.orchestrator import run_pipeline
+# Try LangGraph orchestrator first, fall back to plain orchestrator
+try:
+    from pipeline.langgraph_orchestrator import run_pipeline
+    _FRAMEWORK = "LangGraph"
+except ImportError:
+    from pipeline.orchestrator import run_pipeline
+    _FRAMEWORK = "Plain Python"
 
 
 def main():
@@ -30,6 +37,8 @@ def main():
     parser.add_argument("--beta", type=float, default=None, help="Service level weight (0-1)")
     parser.add_argument("--max-iter", type=int, default=3, help="Max re-optimization iterations")
     args = parser.parse_args()
+
+    print(f"Framework: {_FRAMEWORK}")
 
     if args.eval:
         from evaluation.evaluate_intelligence_agent import run_evaluation

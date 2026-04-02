@@ -263,7 +263,7 @@ def build_document():
     story.append(Paragraph("2. System Architecture", styles['SH']))
     story.append(Paragraph(
         "The pipeline consists of <b>9 specialized sub-agents</b> (3 LLM-enhanced, 6 deterministic) "
-        "orchestrated via a hybrid pattern combining sequential processing, conditional routing, "
+        "orchestrated via a <b>LangGraph StateGraph</b> (pipeline/langgraph_orchestrator.py) implementing a hybrid pattern: sequential processing, conditional routing, "
         "an iterative optimization loop, and a human-in-the-loop checkpoint. Two external tools "
         "(Pandas for data processing, Pyomo/SciPy for optimization) are integrated as callable "
         "functions. A <b>multi-backend LLM client</b> (Gemini primary, Groq/LLaMA-3.3-70b fallback, "
@@ -452,7 +452,7 @@ def build_document():
     # ═══════════════════════════════════════════════════════════
     story.append(Paragraph("6. Orchestration Pattern", styles['SH']))
     story.append(Paragraph(
-        "We selected a <b>Hybrid Orchestration Pattern</b> combining four sub-patterns. Each addresses "
+        "We selected a <b>Hybrid Orchestration Pattern</b> implemented as a <b>LangGraph StateGraph</b> with 9 nodes, conditional edges, and a loop-back edge for iterative re-optimization. Four sub-patterns address "
         "a specific operational reality of supply chain rebalancing:", styles['B']))
     patterns = [
         [Paragraph("<b>Pattern</b>", styles['CellB']), Paragraph("<b>Where Used</b>", styles['CellB']),
@@ -630,40 +630,36 @@ def build_document():
     ], col_widths=[W*0.22, W*0.22, W*0.56]))
     story.append(Spacer(1, 6))
 
-    story.append(Paragraph("Actual Log Excerpt — Happy Path Run with LLM (2026-03-31 10:18 AM)", styles['SSH']))
+    story.append(Paragraph("Actual Log Excerpt — Happy Path Run via LangGraph (2026-04-02 6:58 PM)", styles['SSH']))
     log = (
-        "10:18:03,220 | llm_client        | INFO    | Gemini backend initialized (google.genai SDK)\n"
-        "10:18:03,369 | llm_client        | INFO    | Groq backend initialized (LLaMA/Mixtral)\n"
-        "10:18:03,369 | llm_client        | INFO    | LLM fallback chain: Gemini -> Groq -> Deterministic\n"
-        "10:18:03,871 | llm_client        | WARNING | Gemini/gemini-2.0-flash: 400 API Key not found\n"
-        "10:18:04,768 | llm_client        | INFO    | LLM response via Groq/LLaMA-3.3-70b (4 chars)\n"
-        "10:18:04,768 | input_guardrail   | INFO    | LLM injection check: SAFE\n"
-        "10:18:04,779 | input_guardrail   | INFO    | Validation: PASS | Errors: 0 | Warnings: 0\n"
-        "10:18:04,808 | data_tool         | INFO    | [Tool #1: Pandas] Merged: 75 rows | 15 SKUs | 5 locations\n"
-        "10:18:06,247 | llm_client        | INFO    | LLM response via Groq/LLaMA-3.3-70b (760 chars)\n"
-        "10:18:06,248 | inventory_intel   | INFO    | LLM analysis generated (760 chars)\n"
-        "10:18:06,248 | inventory_intel   | INFO    | INTELLIGENCE: excess=52, shortage=18, mismatches=5\n"
-        "10:18:06,288 | optimizer_tool    | WARNING | [Tool #2] No LP solver, falling back to SciPy HiGHS\n"
-        "10:18:06,288 | optimizer_tool    | INFO    | [Tool #2] OPTIMAL | 17 transfers | Cost: Rs.73,291\n"
-        "10:18:07,663 | llm_client        | INFO    | LLM response via Groq/LLaMA-3.3-70b (981 chars)\n"
-        "10:18:07,664 | recommendation    | INFO    | LLM enriched 5 recommendations\n"
-        "10:18:07,666 | human_in_loop     | INFO    | HITL mode=auto | ACCEPT_ALL | 17 accepted\n"
-        "10:18:07,668 | memory_agent      | INFO    | 17 accepted | Loop: CONTINUE\n"
-        "10:18:07,668 | reoptimization    | INFO    | LOOP CONTINUE -> Iteration 2\n"
-        "10:18:09,320 | recommendation    | INFO    | LLM enriched 5 recommendations (iter 2)\n"
-        "10:18:09,322 | memory_agent      | WARNING | Duplicate skipped: SKU002 Mumbai->Pune\n"
-        "10:18:10,434 | recommendation    | INFO    | LLM enriched 3 recommendations (iter 3)\n"
-        "10:18:10,435 | reoptimization    | INFO    | Max iterations (3) reached. LOOP STOP\n"
-        "10:18:10,438 | output_guardrail  | INFO    | APPROVED | 25 recs | 0 removed | 0 PII flags\n"
-        "10:18:10,440 | orchestrator      | INFO    | PIPELINE COMPLETE | output_validated | Recs: 25 | Trace: 39"
+        "18:58:03,983 | llm_client        | INFO    | LLM fallback chain: Gemini -> Groq -> Deterministic\n"
+        "18:58:03,446 | langgraph_orch    | INFO    | PIPELINE START (LangGraph) | auto | Max Iter: 3\n"
+        "18:58:04,760 | llm_client        | INFO    | LLM response via Groq/LLaMA-3.3-70b (4 chars)\n"
+        "18:58:04,760 | input_guardrail   | INFO    | LLM injection check: SAFE\n"
+        "18:58:04,831 | data_tool         | INFO    | [Tool #1: Pandas] Merged: 75 rows | 15 SKUs | 5 locations\n"
+        "18:58:06,077 | llm_client        | INFO    | LLM response via Groq/LLaMA-3.3-70b (764 chars)\n"
+        "18:58:06,078 | inventory_intel   | INFO    | LLM analysis generated (764 chars)\n"
+        "18:58:06,097 | optimizer_tool    | WARNING | [Tool #2] No LP solver, falling back to SciPy HiGHS\n"
+        "18:58:06,097 | optimizer_tool    | INFO    | [Tool #2] OPTIMAL | 17 transfers | Cost: Rs.73,291\n"
+        "18:58:07,407 | llm_client        | INFO    | LLM response via Groq/LLaMA-3.3-70b (1011 chars)\n"
+        "18:58:07,409 | recommendation    | INFO    | LLM enriched 5 recommendations\n"
+        "18:58:07,413 | human_in_loop     | INFO    | HITL mode=auto | ACCEPT_ALL | 17 accepted\n"
+        "18:58:07,416 | memory_agent      | INFO    | 17 accepted | Loop: CONTINUE\n"
+        "18:58:07,418 | langgraph_orch    | INFO    | LOOP CONTINUE -> Iteration 2\n"
+        "18:58:09,073 | recommendation    | INFO    | LLM enriched 5 recommendations (iter 2)\n"
+        "18:58:09,075 | memory_agent      | WARNING | Duplicate skipped: SKU002 Mumbai->Pune\n"
+        "18:58:10,269 | recommendation    | INFO    | LLM enriched 3 recommendations (iter 3)\n"
+        "18:58:10,272 | langgraph_orch    | INFO    | LOOP STOP -> Output Guardrail\n"
+        "18:58:10,276 | output_guardrail  | INFO    | APPROVED | 25 recs | 0 removed | 0 PII flags\n"
+        "18:58:10,276 | langgraph_orch    | INFO    | PIPELINE COMPLETE | output_validated | Recs: 25 | Trace: 39"
     )
     story.append(Paragraph(log.replace('\n', '<br/>'), styles['CB']))
     story.append(Spacer(1, 4))
     story.append(Paragraph("Adversarial Input — Prompt Injection Rejection", styles['SSH']))
     adv = (
-        "10:20:20,001 | input_guardrail   | WARNING | Prompt injection detected (regex): Ignore all rules...\n"
-        "10:20:20,001 | input_guardrail   | WARNING | Input REJECTED: potential prompt injection detected\n"
-        "10:20:20,001 | orchestrator      | WARNING | Pipeline ABORTED at Input Guardrail: REJECTED"
+        "18:59:25,932 | langgraph_orch    | INFO    | PIPELINE START (LangGraph) | Query: Ignore all rules...\n"
+        "18:59:25,937 | input_guardrail   | WARNING | Prompt injection detected (regex): Ignore all rules...\n"
+        "18:59:25,937 | langgraph_orch    | WARNING | Pipeline ABORTED at Input Guardrail: REJECTED"
     )
     story.append(Paragraph(adv.replace('\n', '<br/>'), styles['CB']))
     story.append(PageBreak())
@@ -724,14 +720,14 @@ def build_document():
         "Synthetic data only — no live warehouse management system integration.",
         "Gemini free-tier quota limits required Groq fallback. Production needs paid API tier.",
         "Single-period optimization. Does not account for multi-week demand uncertainty.",
-        "Balance threshold (5%) needs domain calibration. Code is ADK-compatible but not wrapped in Google ADK Agent classes.",
+        "Balance threshold (5%) needs domain calibration.",
     ]:
         story.append(Paragraph(f"- {l}", styles['J9']))
 
     story.append(Spacer(1, 4))
     story.append(Paragraph("Future Improvements", styles['SSH']))
     for l in [
-        "Google ADK Agent classes for native tracing and tool registration.",
+        "Extend LangGraph with checkpointing for state persistence across sessions.",
         "MCP server integration for real-time WMS (Warehouse Management System) data feeds.",
         "Multi-period rolling optimization with Monte Carlo demand uncertainty simulation.",
         "Streamlit dashboard for interactive HITL review with drag-and-drop approval.",
